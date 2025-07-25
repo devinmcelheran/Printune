@@ -1,0 +1,167 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "preLaunchTask": {
+                "task": "build",
+                "type": "dotnet"
+            },
+            "name": "Help",
+            "type": "coreclr",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
+            "console": "internalConsole",
+            "args": [ "Help", "-Template" ],
+            "env": {
+                "intunewinutil": "\"C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe'\""
+            }
+        },
+        {
+            "preLaunchTask": {
+                "task": "build",
+                "type": "dotnet"
+            },
+            "name": "InstallPrinter",
+            "type": "coreclr",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
+            "args" : [
+                "InstallPrinter", "-PrinterName", "B38UPrintune", "-Config", "C:\\temp\\PrintuneTest\\B38UPrintune\\config.json"
+            ],
+            "console": "internalConsole",
+            "env": {
+                "intunewinutil": "\"C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe'\""
+            }
+        },
+        {
+            "preLaunchTask": {
+                "task": "build",
+                "type": "dotnet"
+            },
+            "name": "RemovePrinter",
+            "type": "coreclr",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
+            "args" : [
+                "UninstallPrinter", "-PrinterName", "B38UPrintune"
+            ],
+            "console": "internalConsole",
+            "env": {
+                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
+            }
+        },
+        {
+            "preLaunchTask": {
+                "task": "build",
+                "type": "dotnet"
+            },
+            "name": "PackagePrinter",
+            "type": "coreclr",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
+            "args" : [
+                "PackagePrinter", "-PrinterName", "B38U", "-Output", "C:\\Temp\\PrintuneTest\\B38UPrintune", "-IntuneWinUtil", "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe"
+            ],
+            "console": "internalConsole",
+            "env": {
+                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
+            }
+        },
+        {
+            "preLaunchTask": {
+                "task": "build",
+                "type": "dotnet"
+            },
+            "name": "PackageDriver",
+            "type": "coreclr",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
+            "args" : [
+                "PackageDriver", "-Driver", "Xerox Global Print Driver PCL6", "-Output", "C:\\Temp\\Printune\\XeroxPCL", "-IntuneWinUtil", "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe"
+            ],
+            "console": "internalConsole",
+            "env": {
+                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
+            }
+        },
+        {
+            "preLaunchTask": {
+                "task": "build",
+                "type": "dotnet"
+            },
+            "name": "UninstallDriver",
+            "type": "coreclr",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
+            "args" : [
+                "UninstallDriver", "-Driver", "Xerox Global Print Driver PCL6", "-Output", "C:\\Temp\\Printune\\XeroxPCL", "-IntuneWinUtil", "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe"
+            ],
+            "console": "internalConsole",
+            "env": {
+                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
+            }
+        },
+        {
+            "preLaunchTask": {
+                "task": "build",
+                "type": "dotnet"
+            },
+            "name": "InstallDriver",
+            "type": "coreclr",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
+            "args" : [
+                "InstallDriver", "-Name", "Xerox Global Print Driver PCL6", "-Path", "C:\\Users\\devin.mcelheran\\Downloads\\UNIV_5.1055.3.0_PCL6_x64\\UNIV_5.1055.3.0_PCL6_x64_Driver.inf\\x3UNIVX.inf"
+            ],
+            "console": "internalConsole",
+            "env": {
+                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
+            }
+        },
+        {
+            "preLaunchTask": {
+                "task": "build",
+                "type": "dotnet"
+            },
+            "name": "VerifyPrinter",
+            "type": "coreclr",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
+            "args" : [
+                "VerifyPrinter", "-Name", "B38U"
+            ],
+            "console": "internalConsole"
+        },
+        {
+            "preLaunchTask": {
+                "task": "build",
+                "type": "dotnet"
+            },
+            "name": "VerifyDriver",
+            "type": "coreclr",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
+            "args" : [
+                "VerifyDriver", "-Name", "Xerox Global Print Driver PCL6", "-Version", "51055.300.0.0"
+            ],
+            "console": "internalConsole"
+        }
+    ]
+}

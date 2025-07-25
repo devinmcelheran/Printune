@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net8.0;net48</TargetFrameworks>
+    <RunTimeIdentifier>win-x64</RunTimeIdentifier>
+    <PublishedTrimmed>true</PublishedTrimmed>
+    <NoWarn>CA1416;</NoWarn>
+  </PropertyGroup>
+
+  <Target Name="CopyLicense" AfterTargets="Publish">
+    <PropertyGroup>
+      <NewtonsoftLicensePath>$(UserProfile)\.nuget\packages\newtonsoft.json\13.0.3\LICENSE.md</NewtonsoftLicensePath>
+    </PropertyGroup>
+    <Copy SourceFiles="$(NewtonsoftLicensePath)" DestinationFiles="$(OutputPath)\Newtonsoft.Json.LICENSE.md" />
+    <Copy SourceFiles="$(NewtonsoftLicensePath)" DestinationFiles="$(OutputPath)\Publish\Newtonsoft.Json.LICENSE.md" />
+    <Copy SourceFiles="LICENSE" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="LICENSE" DestinationFolder="$(OutputPath)\Publish\" />
+  </Target>
+
+  <PropertyGroup>
+    <MyMajorVersion>0</MyMajorVersion>
+    <MyMinorVersion>9</MyMinorVersion>
+    <MyRevisionNumber>0</MyRevisionNumber>
+    <MyBuildNumber>0</MyBuildNumber>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyVersion>$(MyMajorVersion).$(MyMinorVersion).$(MyBuildNumber).$(MyRevisionNumber)</AssemblyVersion>
+    <FileVersion>$(MyMajorVersion).$(MyMinorVersion).$(MyBuildNumber).$(MyRevisionNumber)</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
+
+</Project>
