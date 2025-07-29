@@ -85,7 +85,7 @@ namespace Printune
 
             if (_intent == "driver")
             {
-                if (!ParameterParser.GetParameterValue(Args, "-Driver", out _driverName))
+                if (!ParameterParser.GetParameterValue(Args, "-Driver", out _driverName) && !ParameterParser.GetParameterValue(Args, "-Path", out _driverName))
                     throw new Invocation.MissingArgumentException("Invalid invocation: A valid driver name or path is required.");
 
                 // Check if driver exists in system by attempting instantiation.
