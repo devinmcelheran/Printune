@@ -88,11 +88,14 @@ The JSON template for defining printers (and printer ports) can be generated usi
         }
     }
 ]
-### Add a Printer
+### Add a Printer Using Local File
 You can specify a configuration file with the `-Config` argument, or Printune will check the current working directory for `config.json` by default.
 
     C:\> printune.exe InstallPrinter -Name FinancePrinter -Config FinancePrinter.json
+### Add a Printer Using a Remote File
+You can even specify a file that's accessible over HTTP/S.
 
+    C:\> printune.exe InstallPrinter -Name FinancePrinter -Config https://print.corp.com/financeprinter.json
 ### Remove a Printer
     C:\> printune.exe UninstallPrinter -Name FinancePrinter
 ## Drivers
