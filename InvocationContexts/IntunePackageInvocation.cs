@@ -151,7 +151,7 @@ namespace Printune
         private string CopyPrintune()
         {
             string destination;
-            if (!_outputPath.EndsWith(".json"))
+            if (_outputPath.EndsWith(".json"))
                 destination = Path.GetDirectoryName(_outputPath);
             else
                 destination = _outputPath;
@@ -160,11 +160,26 @@ namespace Printune
             if (destination == null)
                 throw new Invocation.InvalidNameOrPathException($"Invalid invocation: Output parameter requires a valid path.");
 
+            var exeDirectory = Path.GetDirectoryName(Invocation.PrintuneExePath);
+
             var printuneFileName = new FileInfo(Invocation.PrintuneExePath).Name;
 
             var printuneDestination = Path.Combine(_outputPath, printuneFileName);
 
-            File.Copy(Invocation.PrintuneExePath, printuneDestination, true);
+            var files = new List<string> {
+                Invocation.PrintuneExePath,
+                Path.Combine(exeDirectory, "Newtonsoft.Json.dll"),
+                Path.Combine(exeDirectory, "System.CodeDom.dll"),
+                Path.Combine(exeDirectory, "LICENSE"),
+                Path.Combine(exeDirectory, "NewtonSoft.Json.LICENSE.md")
+            };
+
+            foreach (var file in files)
+            {
+                var path = Path.Combine(destination, Path.GetFileName(file));
+                File.Copy(file, path, true);
+            }
+            
             Log.Write($"Printune executable copied from \"{Invocation.PrintuneExePath}\" to \"{printuneDestination}\".");
             return printuneDestination;
         }
@@ -197,6 +212,7 @@ namespace Printune
                 Log.Write($"IntuneWinAppUtil.exe completed successfully with exit code {result.ExitCode}.");
             else
                 Log.Write($"IntuneWinAppUtil.exe failed with exit code {result.ExitCode}.");
+
             Log.Write("OUTPUT");
             if (result.Success)
                 Log.Write(result.Output, Indent: 1);
@@ -208,6 +224,9 @@ namespace Printune
                 Log.Write("ERROR:");
                 Log.Write(result.Error, true, 1);
             }
+
+            if (result.Success)
+                Log.Write($"Package created at {result.PackagePath}.");
 
             return result.ExitCode;
         }
