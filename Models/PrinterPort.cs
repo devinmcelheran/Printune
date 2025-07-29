@@ -70,7 +70,8 @@ namespace Printune
             printerPort.HostAddress = (string) printerPort._printerPortManagementObject[nameof(HostAddress)];
             printerPort.SNMPCommunity = (string) printerPort._printerPortManagementObject[nameof(SNMPCommunity)];
             printerPort.SNMPEnabled = (bool) printerPort._printerPortManagementObject[nameof(SNMPEnabled)];
-            printerPort.SNMPDevIndex = (UInt32) printerPort._printerPortManagementObject[nameof(SNMPDevIndex)];
+            if (printerPort.SNMPEnabled)
+                printerPort.SNMPDevIndex = (UInt32) printerPort._printerPortManagementObject[nameof(SNMPDevIndex)];
             if (printerPort._printerPortManagementObject[nameof(ByteCount)] != null)
                 printerPort.ByteCount = (bool) printerPort._printerPortManagementObject[nameof(ByteCount)];
 
