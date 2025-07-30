@@ -17,7 +17,8 @@
             "console": "internalConsole",
             "args": [ "Help", "-Template" ],
             "env": {
-                "intunewinutil": "\"C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe'\""
+                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
             }
         },
         {
@@ -35,7 +36,8 @@
             ],
             "console": "internalConsole",
             "env": {
-                "intunewinutil": "\"C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe'\""
+                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
             }
         },
         {
