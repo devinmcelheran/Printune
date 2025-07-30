@@ -15,7 +15,7 @@ namespace Printune
 
         public ParameterFile()
         {
-            _parameters = new Dictionary<string, object>();
+            _parameters = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         }
 
         public ParameterFile(string filePath)
