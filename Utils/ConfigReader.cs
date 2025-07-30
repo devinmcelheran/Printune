@@ -8,8 +8,9 @@ namespace Printune
     {
         public static string Read(string ConfigPath)
         {
-            var configUri = new Uri(ConfigPath);
+            ConfigPath = ExpandIfRelative(ConfigPath);
 
+            var configUri = new Uri(ConfigPath);
             switch (configUri.Scheme)
             {
                 case "http":
@@ -21,6 +22,14 @@ namespace Printune
                 default:
                     throw new Invocation.InvalidNameOrPathException("Invalid invocation: The provided configuration file path is not a valid HTTP, HTTPS, or file path.");
             }
+        }
+
+        private static string ExpandIfRelative(string ConfigPath)
+        {
+            if (File.Exists(ConfigPath))
+                return ReadFile(new Uri(Path.GetFullPath(ConfigPath)));
+            else
+                return ConfigPath;
         }
 
         private static string ReadFile(Uri ConfigPath)
