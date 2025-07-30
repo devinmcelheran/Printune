@@ -148,7 +148,11 @@
             "args" : [
                 "VerifyPrinter", "-Name", "B38U"
             ],
-            "console": "internalConsole"
+            "console": "internalConsole",
+            "env": {
+                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
+            }
         },
         {
             "preLaunchTask": {
@@ -163,7 +167,11 @@
             "args" : [
                 "VerifyDriver", "-Name", "Xerox Global Print Driver PCL6", "-Version", "51055.300.0.0"
             ],
-            "console": "internalConsole"
+            "console": "internalConsole",
+            "env": {
+                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
+            }
         }
     ]
 }
