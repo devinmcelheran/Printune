@@ -36,23 +36,14 @@ namespace Printune
         public PrinterInvocation(string[] Args)
         {
             _intent = _intentStrings[Args[0].ToLower()];
-            if (!ParameterParser.GetParameterValue(Args, "-PrinterName", out _printerName))
-            {
-                throw new Invocation.MissingArgumentException("Invalid invocation: 'PrinterName' paramer is required.");
-            }
 
-            // If the Config parameter is provided a value, use the default.
-            if (!ParameterParser.GetParameterValue(Args, "-Config", out _config) && _intent == "installation")
-            {
-                // If the default does not exist, throw an error.
-                if (!File.Exists(_config))
-                {
-                    throw new Invocation.MissingArgumentException(
-                        "Invalid invocation: A valid URI must be passed with the 'Config' parameter"
-                        + " or there must be a 'config.json' file in the current working directory."
-                        );
-                }
-            }
+            string paramFile = string.Empty;
+            if (ParameterParser.GetParameterValue("-ParamFile", out paramFile))
+                ParseParameterFile(paramFile);
+            else if (File.Exists(Invocation.ParamFile))
+                ParseParameterFile(Invocation.ParamFile);
+            else
+                ParseCommandLine();
 
             if (_intent == "installation")
             {
@@ -61,6 +52,56 @@ namespace Printune
                 // or if it's an HTTP/S URI.
                 _configContent = ConfigReader.Read(_config);
                 Log.Write($"Content read from {_config} configuration file.");
+            }
+        }
+
+        private void ParseCommandLine()
+        {
+            if (!ParameterParser.GetParameterValue("-PrinterName", out _printerName))
+            {
+                throw new Invocation.MissingArgumentException("Invalid invocation: 'PrinterName' paramer is required.");
+            }
+
+            // If the Config parameter is provided a value, use the default.
+            if (!ParameterParser.GetParameterValue("-Config", out _config) && _intent == "installation")
+            {
+                // If the default does not exist and no other has been specified, throw an error.
+                if (!File.Exists(_config))
+                {
+                    throw new Invocation.MissingArgumentException(
+                        "Invalid invocation: A valid URI must be passed with the 'Config' parameter"
+                        + " or there must be a 'config.json' file in the current working directory."
+                        );
+                }
+            }
+        }
+
+        private void ParseParameterFile(string paramFilePath)
+        {
+            var paramFile = new ParameterFile(paramFilePath);
+            try
+            {
+                _printerName = (string)paramFile.GetParameter("PrinterName");
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new Invocation.InvalidNameOrPathException("The \"Name\" parameter is required in the parameter file.");
+            }
+
+            try
+            {
+                _config = (string)paramFile.GetParameter("Config");
+            }
+            catch (KeyNotFoundException)
+            {
+                // If the default does not exist and no other has been specified, throw an error.
+                if (!File.Exists(_config))
+                {
+                    throw new Invocation.MissingArgumentException(
+                        "Invalid invocation: A valid URI must be passed with the 'Config' parameter"
+                        + " or there must be a 'config.json' file in the current working directory."
+                    );
+                }
             }
         }
         /// <summary>
