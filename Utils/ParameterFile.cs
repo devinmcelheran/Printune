@@ -11,19 +11,21 @@ namespace Printune
 {
     public class ParameterFile
     {
-        private Dictionary<string, object> _parameters;
+        private Dictionary<string, object> _parameters = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
-        public ParameterFile()
-        {
-            _parameters = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-        }
+        public ParameterFile() { }
 
         public ParameterFile(string filePath)
         {
             try
             {
                 var content = File.ReadAllText(filePath);
-                _parameters = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
+                var fileParams = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
+
+                foreach (var param in fileParams)
+                {
+                    _parameters[param.Key] = param.Value;
+                }
             }
             catch (Exception ex)
             {
@@ -51,7 +53,7 @@ namespace Printune
             }
             else
             {
-                throw new ArgumentException($"Parameter '{parameterName}' not found in the parameter file.");
+                throw new KeyNotFoundException($"Parameter '{parameterName}' not found in the parameter file.");
             }
         }
 
