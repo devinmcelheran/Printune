@@ -15,7 +15,7 @@ namespace Printune
         {
             get
             {
-                return Environment.GetCommandLineArgs();
+                return Environment.GetCommandLineArgs().Skip(1).ToArray();
             }
         }
         /// <summary>
