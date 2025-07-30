@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
+/// <summary>
+/// This class represents a parameter file that can be used to store key-value pairs.
+/// The paramter file can be provided instead of arguments at the command line.
+/// </summary>
 namespace Printune
 {
     public class ParameterFile
     {
-        private Dictionary<string, string> _parameters;
+        private Dictionary<string, object> _parameters;
 
         public ParameterFile()
         {
-            _parameters = new Dictionary<string, string>();
+            _parameters = new Dictionary<string, object>();
         }
 
         public ParameterFile(string filePath)
@@ -19,7 +23,7 @@ namespace Printune
             try
             {
                 var content = File.ReadAllText(filePath);
-                _parameters = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
+                _parameters = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
             }
             catch (Exception ex)
             {
@@ -35,12 +39,12 @@ namespace Printune
             _parameters[parameterName] = parameterValue;
         }
 
-        public string GetParameter(string parameterName)
+        public object GetParameter(string parameterName)
         {
             if (string.IsNullOrEmpty(parameterName))
                 throw new ArgumentException("Parameter name cannot be null or empty.", nameof(parameterName));
 
-            string value;
+            object value;
             if (_parameters.TryGetValue(parameterName, out value))
             {
                 return value;
