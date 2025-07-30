@@ -5,6 +5,10 @@ namespace Printune
 {
     public static class ParameterParser
     {
+        public static bool GetParameterValue(string ParameterName, out string Value)
+        {
+            return GetParameterValue(Invocation.Args, ParameterName, out Value);
+        }
         public static bool GetParameterValue(string[] Args, string ParameterName, out string Value)
         {
             List<string> argList = new List<string>(Args);
@@ -34,6 +38,10 @@ namespace Printune
             return true;
         }
 
+        public static bool GetFlag(string FlagName)
+        {
+            return GetFlag(Invocation.Args, FlagName);
+        }
         public static bool GetFlag(string[] Args, string FlagName)
         {
             List<string> argList = new List<string>(Args);
@@ -48,7 +56,5 @@ namespace Printune
             else
                 return true;
         }
-
-
     }
 }
