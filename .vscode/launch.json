@@ -17,7 +17,7 @@
             "console": "internalConsole",
             "args": [ "Help", "-Template" ],
             "env": {
-                "intunewinutil": "\"C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe'\""
+                "intunewinutil": "C:\\Tools\\IntuneWinAppUtil.exe",
             }
         },
         {
@@ -31,11 +31,11 @@
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
             "args" : [
-                "InstallPrinter", "-PrinterName", "B38UPrintune", "-Config", "C:\\temp\\PrintuneTest\\B38UPrintune\\config.json"
+                "InstallPrinter", "-PrinterName", "B38UPrintune", "-Config", "C:\\temp\\B38U\\config.json"
             ],
             "console": "internalConsole",
             "env": {
-                "intunewinutil": "\"C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe'\""
+                "intunewinutil": "C:\\Tools\\IntuneWinAppUtil.exe",
             }
         },
         {

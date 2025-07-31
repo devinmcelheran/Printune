@@ -27,7 +27,7 @@ namespace Printune
         private static string ExpandIfRelative(string ConfigPath)
         {
             if (File.Exists(ConfigPath))
-                return ReadFile(new Uri(Path.GetFullPath(ConfigPath)));
+                return Path.GetFullPath(ConfigPath);
             else
                 return ConfigPath;
         }
