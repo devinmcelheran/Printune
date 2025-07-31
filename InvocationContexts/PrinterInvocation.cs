@@ -38,7 +38,8 @@ namespace Printune
             _intent = _intentStrings[Args[0].ToLower()];
             if (!ParameterParser.GetParameterValue(Args, "-PrinterName", out _printerName))
             {
-                throw new Invocation.MissingArgumentException("Invalid invocation: 'PrinterName' paramer is required.");
+                if(!ParameterParser.GetParameterValue(Args, "-Name", out _printerName))
+                    throw new Invocation.MissingArgumentException("Invalid invocation: 'PrinterName' paramer is required.");
             }
 
             // If the Config parameter is provided a value, use the default.

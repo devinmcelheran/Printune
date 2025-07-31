@@ -13,8 +13,8 @@ Both network printers and drivers.
     printune.exe InstallDriver [-Recurse] {-Path <driver.inf> | -Path <folder\> } { -Name <driver name> } [-LogPath <file.log>]
     printune.exe UninstallDriver { -Driver <PrinterDriverName> | -Path <driver.inf> } [-LogPath <file.log>]
     
-    printune.exe InstallPrinter { -Name <PrinterName> } [ -Config <config.json> ] [-LogPath <file.log>]
-    printune.exe UninstallPrinter { -Name <PrinterName> } [-LogPath <file.log>]
+    printune.exe InstallPrinter { -PrinterName <PrinterName> } [ -Config <config.json> ] [-LogPath <file.log>]
+    printune.exe UninstallPrinter { -PrinterName <PrinterName> } [-LogPath <file.log>]
     
     printune.exe PackageDriver { -Driver <PrinterDriverName> | -Path <driver.inf> } [ -Output <destination\> ] [ -IntuneWinUtil <path\intunewinutil.exe> ] [-LogPath <path\to\file.log>]
     printune.exe PackagePrinter { -PrinterName <PrinterName>} [ -Output <destination\> ] [ -IntuneWinUtil <path\intunewinutil.exe> ] [-LogPath <file.log>]
