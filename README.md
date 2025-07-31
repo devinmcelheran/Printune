@@ -112,18 +112,13 @@ Printune can install and uninstall drivers with just a few arguments.
 # Roadmap
 This is a project that I've tinkered with to do away with the my collection of PowerShell scripts that we use for printer deployment. They work, but they have the occasional issue. This appears to be a more streamlined approach that even those less comfortable with PowerShell can use.
 
-I expect there will be bugs. I'm not particularly savvy with Git or GitHub yet, so further development might be happening more offline than through Git for the time being.
-
-## Known Issues
-- Only the Printune executable gets copied into the output directory when packaging. This is due to a switch from `System.Text.Json` to `Newtonsoft.Json`, as describe in the clarifications below, which didn't require an additional DLL. The fix is simply copying the `Newtonsoft.Json.dll` and `Newt
-
 ## Potential Future Features
+- Automatically Generated Install/Uninstall/Detection Scripts
 - Parameter Name Tweaks
 - Better Help Text
     - Only Show Help Text Relevant to Attempted Operation
     - More Helpful Errors (And Remove Stack Trace)
         - Maybe Add a Command Switch to Enable Stack Trace Output
-- Automatically Generated Install/Uninstall/Detection Scripts
 
 # Development
 I'm a bit of an amateur developer. While I'm pretty hand in C#, my background is networking and systems adminsitration.
