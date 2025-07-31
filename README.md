@@ -10,7 +10,7 @@ Printune can
 Both network printers and drivers.
 
 ## Syntax
-    printune.exe InstallDriver [-Recurse] {-Path <driver.inf> | -Path <folder\> } [-LogPath <file.log>]
+    printune.exe InstallDriver [-Recurse] {-Path <driver.inf> | -Path <folder\> } { -Name <driver name> } [-LogPath <file.log>]
     printune.exe UninstallDriver { -Driver <PrinterDriverName> | -Path <driver.inf> } [-LogPath <file.log>]
     
     printune.exe InstallPrinter { -Name <PrinterName> } [ -Config <config.json> ] [-LogPath <file.log>]
@@ -101,11 +101,11 @@ You can even specify a file that's accessible over HTTP/S.
 ## Drivers
 Printune can install and uninstall drivers with just a few arguments.
 ### Installing a Driver with a Single .inf File
-    C:\> printune.exe InstallDriver -Path zerocks_uni_pcl6\x3UNIVZ.inf
+    C:\> printune.exe InstallDriver -Path zerocks_uni_pcl6\x3UNIVZ.inf -Name "Zerocks Global PCL6"
 ### Installing a Driver with Many .inf Files
-    C:\> printune.exe InstallDriver -Recurse -Path driver\
+    C:\> printune.exe InstallDriver -Recurse -Path "driver\" -Name "Zerocks Global PCL6"
 ### Uninstalling a Driver Using an .inf File Path
-    C:\> printune.exe UninstallDriver -Path zerocks_uni_pcl6\x3UNIVZ.inf
+    C:\> printune.exe UninstallDriver -Path "zerocks_uni_pcl6\x3UNIVZ.inf"
 ### Uninstalling a Driver by Name
     C:\> printune.exe UninstallDriver -Driver "Zerocks Global PCL6"
 

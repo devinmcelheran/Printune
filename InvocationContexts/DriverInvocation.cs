@@ -75,7 +75,10 @@ namespace Printune
                 _path = Environment.CurrentDirectory;
             }
 
-            ParameterParser.GetParameterValue(Args, "-Name", out _name);
+            if (!ParameterParser.GetParameterValue(Args, "-Name", out _name) && _intent == "installation")
+            {
+                throw new Invocation.InvalidNameOrPathException("No driver name provided for installation.");
+            }
 
             if (!File.Exists(_path) && !Directory.Exists(_path))
             {
@@ -121,7 +124,7 @@ namespace Printune
                     try
                     {
                         if (!String.IsNullOrEmpty(_name))
-                        driverEnabled |= PrinterDriver.EnablePrinterDriver(_name) != null;
+                            driverEnabled |= PrinterDriver.EnablePrinterDriver(_name) != null;
                     }
                     catch
                     {
