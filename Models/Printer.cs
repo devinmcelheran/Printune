@@ -96,7 +96,14 @@ namespace Printune
             if (printerList.Where(printer => printer.DriverName == PrinterName).Count() > 1)
                 throw new Invocation.ConfigurationFileException($"Invalid configuration file contains more than one printer definition name '{PrinterName}'.");
 
-            return printerList.Where(printer => printer.Name == PrinterName).First();
+            try
+            {
+                return printerList.Where(printer => printer.Name == PrinterName).First();
+            }
+            catch (InvalidOperationException)
+            {
+                throw new Invocation.InvalidNameOrPathException($"The provided configuration file does not contain a printer named '{PrinterName}'.");
+            }
         }
         public static Printer FromExisting(string PrinterName)
         {
