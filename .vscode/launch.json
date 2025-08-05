@@ -31,7 +31,7 @@
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
             "args" : [
-                "InstallPrinter", "-PrinterName", "B38UPrintune", "-Config", "C:\\temp\\B38U\\config.json"
+                "InstallPrinter", "-PrinterName", "CanonPrintune", "-Config", "C:\\temp\\B38U\\config.json"
             ],
             "console": "internalConsole",
             "env": {
