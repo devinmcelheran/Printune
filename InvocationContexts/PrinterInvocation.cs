@@ -38,7 +38,7 @@ namespace Printune
             _intent = _intentStrings[Args[0].ToLower()];
             if (!ParameterParser.GetParameterValue(Args, "-PrinterName", out _printerName))
             {
-                if(!ParameterParser.GetParameterValue(Args, "-Name", out _printerName))
+                if (!ParameterParser.GetParameterValue(Args, "-Name", out _printerName))
                     throw new Invocation.MissingArgumentException("Invalid invocation: 'PrinterName' paramer is required.");
             }
 
@@ -81,9 +81,9 @@ namespace Printune
                 var printer = Printer.FromConfig(_printerName, _configContent);
                 Log.Write($"Printer \"{_printerName}\" successfully hydrated from configuration file.");
 
-                // Enable the printer driver so it's ready for the printer.
-                PrinterDriver.EnablePrinterDriver(printer.DriverName);
-                Log.Write($"Printer driver \"{printer.DriverName}\" successfully enabled.");
+                var driver = new PrinterDriver(printer.DriverName);
+                if (!driver.Exists)
+                    throw new Invocation.ConfigurationFileException($"Printer driver \"{printer.DriverName}\" not installed and/or enabled.");
 
                 // Creates Windows the print queue.
                 printer.Commit();

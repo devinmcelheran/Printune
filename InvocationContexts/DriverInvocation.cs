@@ -134,7 +134,7 @@ namespace Printune
                 else
                     Log.Write(fileRelativePath + $" {_intent} failed with exit code {result.ExitCode}:", true);
 
-                Log.Write("OUTPUT: TEST");
+                Log.Write("OUTPUT:");
                 Log.Write(result.Output, !result.Success, Indent: 1);
 
                 if (!string.IsNullOrEmpty(result.Error))
