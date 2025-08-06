@@ -24,12 +24,12 @@ namespace Printune
         public static void Register()
         {
             // Installation Context
-            var installHelp = @"printune.exe InstallPrinter { -Name <PrinterName> } [ -Config <path\to\config> ] [-LogPath <path\to\file.log>]";
+            var installHelp = @"printune.exe InstallPrinter { -PrinterName <PrinterName> } [ -Config <config.json> ] [-LogPath <file.log>]";
             Invocation.RegisterContext("InstallPrinter".ToLower(), typeof(PrinterInvocation), installHelp);
             _intentStrings.Add("InstallPrinter".ToLower(), "installation");
 
             // Uninstallation Context
-            var uninstallHelp = @"printune.exe UninstallPrinter { -Name <PrinterName> } [-LogPath <path\to\file.log>]";
+            var uninstallHelp = @"printune.exe UninstallPrinter { -PrinterName <PrinterName> } [-LogPath <file.log>]";
             Invocation.RegisterContext("UninstallPrinter".ToLower(), typeof(PrinterInvocation), uninstallHelp);
             _intentStrings.Add("UninstallPrinter".ToLower(), "uninstallation");
         }
