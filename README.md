@@ -131,4 +131,4 @@ There's definitely some weirdness going on in this project. I started it as just
 This required the removal of several C# features (like static interface methods) as well as `System.Text.Json` in favor of `Newtonsoft.Json`. This introduced a lot of change, including many errors, some of which might not have been dealt with yet.
 
 # Thank You
-Thank you @seirdotexe for all your help and patience in troubleshooting.
+Thank you [@seirdotexe](https://github.com/seirdotexe) for all your help and patience in troubleshooting.
