@@ -66,7 +66,7 @@ namespace Printune
 
         public static void Register()
         {
-            var help = @"printune.exe Help";
+            var help = @"printune.exe Help [-Template]";
             Invocation.RegisterContext("Help".ToLower(), typeof(HelpInvocation), help);
         }
 

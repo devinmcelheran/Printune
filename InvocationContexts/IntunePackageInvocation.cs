@@ -54,12 +54,12 @@ namespace Printune
         public static void Register()
         {
             // Driver Context
-            var driverHelp = @"printune.exe PackageDriver { -Driver <PrinterDriverName> | -Path <path/to/driver.inf> } [ -Output <destination\folder\path\> ] [ -IntuneWinUtil <path\to\intunewinutil.exe> ] [-LogPath <path\to\file.log>]";
+            var driverHelp = @"printune.exe PackageDriver { -Driver <PrinterDriverName> | -Path <driver.inf> } [ -Output <destination\> ] [ -IntuneWinUtil <path\intunewinutil.exe> ] [-LogPath <path\to\file.log>]";
             Invocation.RegisterContext("PackageDriver".ToLower(), typeof(IntunePackageInvocation), driverHelp);
             _intentStrings.Add("PackageDriver".ToLower(), "driver");
             
             // Printer Context
-            var printerHelp = @"printune.exe PackagePrinter { -PrinterName <PrinterName>} [ -Output <destination\folder\path\> ] [ -IntuneWinUtil <path\to\intunewinutil.exe> ] [-LogPath <path\to\file.log>]";
+            var printerHelp = @"printune.exe PackagePrinter { -PrinterName <PrinterName>} [ -Output <destination\> ] [ -IntuneWinUtil <path\intunewinutil.exe> ] [-LogPath <file.log>]";
             Invocation.RegisterContext("PackagePrinter".ToLower(), typeof(IntunePackageInvocation), printerHelp);
             _intentStrings.Add("PackagePrinter".ToLower(), "printer");
         }
