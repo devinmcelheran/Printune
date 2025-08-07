@@ -17,7 +17,7 @@ Both network printers and drivers.
     printune.exe UninstallPrinter { -PrinterName <PrinterName> } [-LogPath <file.log>]
     
     printune.exe PackageDriver { -Driver <PrinterDriverName> | -Path <driver.inf> } [ -Output <destination\> ] [ -IntuneWinUtil <path\intunewinutil.exe> ] [-LogPath <path\to\file.log>]
-    printune.exe PackagePrinter { -PrinterName <PrinterName>} [ -Output <destination\> ] [ -IntuneWinUtil <path\intunewinutil.exe> ] [-LogPath <file.log>]
+    printune.exe PackagePrinter { -PrinterName <PrinterName>} [ -ExportPreferences ] [ -Output <destination\> ] [ -IntuneWinUtil <path\intunewinutil.exe> ] [-LogPath <file.log>]
     
     printune.exe VerifyDriver -Name <DriverName> [-Version <Version>] [-LogPath <file.log>]
     printune.exe VerifyPrinter -Name <PrinterName> [-LogPath <file.log>]
