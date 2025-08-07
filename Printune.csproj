@@ -8,7 +8,7 @@
     <NoWarn>CA1416;</NoWarn>
   </PropertyGroup>
 
-  <Target Name="CopyLicense" AfterTargets="Publish">
+  <Target Name="CopyLicense" AfterTargets="Publish;build;debug">
     <PropertyGroup>
       <NewtonsoftLicensePath>$(UserProfile)\.nuget\packages\newtonsoft.json\13.0.3\LICENSE.md</NewtonsoftLicensePath>
     </PropertyGroup>

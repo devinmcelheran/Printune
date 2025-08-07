@@ -39,12 +39,12 @@ namespace Printune
         public static void Register()
         {
             // Installation Context
-            var installHelp = @"printune.exe InstallDriver { -Recurse | -Path <path/to/driver.inf> } [-LogPath <path\to\file.log>]";
+            var installHelp = @"printune.exe InstallDriver [-Recurse] {-Path <driver.inf> | -Path <folder\> } { -Name <driver name> } [-LogPath <file.log>]";
             Invocation.RegisterContext("InstallDriver".ToLower(), typeof(DriverInvocation), installHelp);
             _intentStrings.Add("InstallDriver".ToLower(), "installation");
 
             // Uninstallation Context
-            var uninstallHelp = @"printune.exe UninstallDriver { -Driver <PrinterDriverName> | -Path <path/to/driver.inf> } [-LogPath <path\to\file.log>]";
+            var uninstallHelp = @"printune.exe UninstallDriver { -Driver <PrinterDriverName> | -Path <driver.inf> } [-LogPath <file.log>]";
             Invocation.RegisterContext("UninstallDriver".ToLower(), typeof(DriverInvocation), uninstallHelp);
             _intentStrings.Add("UninstallDriver".ToLower(), "uninstallation");
         }
@@ -87,7 +87,10 @@ namespace Printune
                 _path = Environment.CurrentDirectory;
             }
 
-            ParameterParser.GetParameterValue("-Name", out _name);
+            if (!ParameterParser.GetParameterValue("-Name", out _name) && _intent == "installation")
+            {
+                throw new Invocation.InvalidNameOrPathException("No driver name provided for installation.");
+            }
 
             if (!File.Exists(_path) && !Directory.Exists(_path))
             {

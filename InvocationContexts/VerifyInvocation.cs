@@ -29,11 +29,11 @@ namespace Printune
 
         public static void Register()
         {
-            var verifyPrinterHelp = @"printune.exe VerifyPrinter -Name <PrinterName> [-LogPath <path\to\file.log>]";
+            var verifyPrinterHelp = @"printune.exe VerifyPrinter -Name <PrinterName> [-LogPath <file.log>]";
             Invocation.RegisterContext("VerifyPrinter".ToLower(), typeof(VerifyInvocation), verifyPrinterHelp);
             _intentStrings.Add("VerifyPrinter".ToLower(), "printer");
 
-            var verifyDriverHelp = @"printune.exe VerifyDriver -Name <DriverName> [-Version <Version>] [-LogPath <path\to\file.log>]";
+            var verifyDriverHelp = @"printune.exe VerifyDriver -Name <DriverName> [-Version <Version>] [-LogPath <file.log>]";
             Invocation.RegisterContext("VerifyDriver".ToLower(), typeof(VerifyInvocation), verifyDriverHelp);
             _intentStrings.Add("VerifyDriver".ToLower(), "driver");
         }

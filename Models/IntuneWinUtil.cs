@@ -122,7 +122,7 @@ namespace Printune
             if (File.Exists(packagePath))
                 File.Move(packagePath, newPath);
 
-            return new Result(proc.StartInfo.Arguments, proc.ExitCode, output.ToString(), error.ToString());
+            return new Result(proc.StartInfo.Arguments, newPath, proc.ExitCode, output.ToString(), error.ToString());
         }
         /// <summary>
         /// A simple class to encapsulate the IntuneWinAppUtil.exe results.
@@ -137,6 +137,10 @@ namespace Printune
             /// The exit code of the command.
             /// </summary>
             public readonly int ExitCode;
+            /// <summary>
+            /// The path to the package that was created.
+            /// </summary>
+            public readonly string PackagePath;
             /// <summary>
             /// The stdout output of the command.
             /// </summary>
@@ -157,9 +161,10 @@ namespace Printune
             /// <param name="ExitCode">The code that the command exited with.</param>
             /// <param name="Output">The stdout output.</param>
             /// <param name="Error">The stderr output.</param>
-            public Result(string CommandLine, int ExitCode, string Output, string Error)
+            public Result(string CommandLine, string PackagePath, int ExitCode, string Output, string Error)
             {
                 this.CommandLine = "IntuneWinAppUtil.exe " + CommandLine;
+                this.PackagePath = PackagePath;
                 this.ExitCode = ExitCode;
                 this.Output = Output;
                 this.Error = Error;

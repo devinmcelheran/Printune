@@ -70,7 +70,8 @@ namespace Printune
             printerPort.HostAddress = (string) printerPort._printerPortManagementObject[nameof(HostAddress)];
             printerPort.SNMPCommunity = (string) printerPort._printerPortManagementObject[nameof(SNMPCommunity)];
             printerPort.SNMPEnabled = (bool) printerPort._printerPortManagementObject[nameof(SNMPEnabled)];
-            printerPort.SNMPDevIndex = (UInt32) printerPort._printerPortManagementObject[nameof(SNMPDevIndex)];
+            if (printerPort.SNMPEnabled)
+                printerPort.SNMPDevIndex = (UInt32) printerPort._printerPortManagementObject[nameof(SNMPDevIndex)];
             if (printerPort._printerPortManagementObject[nameof(ByteCount)] != null)
                 printerPort.ByteCount = (bool) printerPort._printerPortManagementObject[nameof(ByteCount)];
 
@@ -123,11 +124,11 @@ namespace Printune
             if (Name == null)
                 throw new ArgumentNullException("Unable to update [PrinterPort] object with null 'Name' property.");
 
-            if (_printerPortManagementObject == null)
+            if (Exists)
                 _printerPortManagementObject = GetPrinterPortManagementObject(Name);
-
-            if (_printerPortManagementObject == null)
-                throw new InvalidOperationException($"[PrinterPort] object with name {Name} does not exist in system.");
+            else
+                using (var managementClass = new ManagementClass("Win32_TcpIpPrinterPort"))
+                    _printerPortManagementObject = managementClass.CreateInstance();
         
             if (!ChangesPending()) return;
 

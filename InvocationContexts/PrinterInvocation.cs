@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Printune.Models;
 
 namespace Printune
 {
@@ -24,18 +25,23 @@ namespace Printune
         public static void Register()
         {
             // Installation Context
-            var installHelp = @"printune.exe InstallPrinter { -Name <PrinterName> } [ -Config <path\to\config> ] [-LogPath <path\to\file.log>]";
+            var installHelp = @"printune.exe InstallPrinter { -PrinterName <PrinterName> } [ -Config <config.json> ] [-LogPath <file.log>]";
             Invocation.RegisterContext("InstallPrinter".ToLower(), typeof(PrinterInvocation), installHelp);
             _intentStrings.Add("InstallPrinter".ToLower(), "installation");
 
             // Uninstallation Context
-            var uninstallHelp = @"printune.exe UninstallPrinter { -Name <PrinterName> } [-LogPath <path\to\file.log>]";
+            var uninstallHelp = @"printune.exe UninstallPrinter { -PrinterName <PrinterName> } [-LogPath <file.log>]";
             Invocation.RegisterContext("UninstallPrinter".ToLower(), typeof(PrinterInvocation), uninstallHelp);
             _intentStrings.Add("UninstallPrinter".ToLower(), "uninstallation");
         }
         public PrinterInvocation(string[] Args)
         {
             _intent = _intentStrings[Args[0].ToLower()];
+            if (!ParameterParser.GetParameterValue("-PrinterName", out _printerName))
+            {
+                if (!ParameterParser.GetParameterValue(Args, "-Name", out _printerName))
+                    throw new Invocation.MissingArgumentException("Invalid invocation: 'PrinterName' paramer is required.");
+            }
 
             string paramFile = string.Empty;
             if (ParameterParser.GetParameterValue("-ParamFile", out paramFile))
@@ -121,13 +127,16 @@ namespace Printune
                 var printer = Printer.FromConfig(_printerName, _configContent);
                 Log.Write($"Printer \"{_printerName}\" successfully hydrated from configuration file.");
 
-                // Enable the printer driver so it's ready for the printer.
-                PrinterDriver.EnablePrinterDriver(printer.DriverName);
-                Log.Write($"Printer driver \"{printer.DriverName}\" successfully enabled.");
+                var driver = new PrinterDriver(printer.DriverName);
+                if (!driver.Exists)
+                    throw new Invocation.ConfigurationFileException($"Printer driver \"{printer.DriverName}\" not installed and/or enabled.");
 
                 // Creates Windows the print queue.
                 printer.Commit();
                 Log.Write($"Printer successfully added.");
+
+                if (!String.IsNullOrEmpty(printer.PreferenceFile))
+                    new PrinterPreference(printer.PreferenceFile).Apply(_printerName);
             }
             else
             {

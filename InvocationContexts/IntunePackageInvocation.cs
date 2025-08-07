@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Printune.Models;
 
 namespace Printune
 {
@@ -21,6 +22,10 @@ namespace Printune
         /// Is used to fork toward exporting a system driver or packaging one from the filesystem.
         /// </summary>
         private bool _exportDriverFromSystem = false;
+        /// <summary>
+        /// Used to conditionally export printer preferences.
+        /// </summary>
+        private bool _exportPrinterPreferences = false;
         /// <summary>
         /// The folder within which resources will be gathered for packaging.
         /// </summary>
@@ -54,12 +59,12 @@ namespace Printune
         public static void Register()
         {
             // Driver Context
-            var driverHelp = @"printune.exe PackageDriver { -Driver <PrinterDriverName> | -Path <path/to/driver.inf> } [ -Output <destination\folder\path\> ] [ -IntuneWinUtil <path\to\intunewinutil.exe> ] [-LogPath <path\to\file.log>]";
+            var driverHelp = @"printune.exe PackageDriver { -Driver <PrinterDriverName> | -Path <driver.inf> } [ -Output <destination\> ] [ -IntuneWinUtil <path\intunewinutil.exe> ] [-LogPath <path\to\file.log>]";
             Invocation.RegisterContext("PackageDriver".ToLower(), typeof(IntunePackageInvocation), driverHelp);
             _intentStrings.Add("PackageDriver".ToLower(), "driver");
-            
+
             // Printer Context
-            var printerHelp = @"printune.exe PackagePrinter { -PrinterName <PrinterName>} [ -Output <destination\folder\path\> ] [ -IntuneWinUtil <path\to\intunewinutil.exe> ] [-LogPath <path\to\file.log>]";
+            var printerHelp = @"printune.exe PackagePrinter { -PrinterName <PrinterName>} [ -ExportPreferences ] [ -Output <destination\> ] [ -IntuneWinUtil <path\intunewinutil.exe> ] [-LogPath <file.log>]";
             Invocation.RegisterContext("PackagePrinter".ToLower(), typeof(IntunePackageInvocation), printerHelp);
             _intentStrings.Add("PackagePrinter".ToLower(), "printer");
         }
@@ -83,9 +88,19 @@ namespace Printune
                     throw new Invocation.InvalidNameOrPathException($"The provided IntuneWinAppUtil.exe path of {_intuneWinUtilPath} does not exist.");
             }
 
+            if (_intent == "printer" && ParameterParser.GetFlag(Args, "-ExportPreferences"))
+            {
+                bool debug = false;
+                #if DEBUG
+                debug = true;
+                #endif
+                if (!Invocation.IsElevated && !debug)
+                    throw new UnauthorizedAccessException("Exporting printer preferences requires elevated (administrator) permissions.");
+                _exportPrinterPreferences = true;
+            }
             if (_intent == "driver")
             {
-                if (!ParameterParser.GetParameterValue(Args, "-Driver", out _driverName))
+                if (!ParameterParser.GetParameterValue(Args, "-Driver", out _driverName) && !ParameterParser.GetParameterValue(Args, "-Path", out _driverName))
                     throw new Invocation.MissingArgumentException("Invalid invocation: A valid driver name or path is required.");
 
                 // Check if driver exists in system by attempting instantiation.
@@ -123,6 +138,12 @@ namespace Printune
         /// <exception cref="Invocation.MissingArgumentException"></exception>
         private string ExportPrinterDefinition()
         {
+            string preferenceFile = null;
+            if (_exportPrinterPreferences)
+            {
+                preferenceFile = Path.Combine(_outputPath, $"{_printerName}.dat");
+                PrinterPreference.Export(_printerName, preferenceFile);
+            }
             string configPath;
             if (!_outputPath.EndsWith(".json"))
                 configPath = Path.Combine(_outputPath, "config.json");
@@ -132,7 +153,7 @@ namespace Printune
             if (_printerName == null)
                 throw new Invocation.MissingArgumentException("Invalid invocation: The PrinterName parameter is required when packaging a printer configuration.");
 
-            var printerDefinition = Printer.SerializeExisting(_printerName);
+            var printerDefinition = Printer.SerializeExisting(_printerName, preferenceFile);
 
             var parentDirectory = Path.GetDirectoryName(configPath);
             if (parentDirectory == null)
@@ -151,7 +172,7 @@ namespace Printune
         private string CopyPrintune()
         {
             string destination;
-            if (!_outputPath.EndsWith(".json"))
+            if (_outputPath.EndsWith(".json"))
                 destination = Path.GetDirectoryName(_outputPath);
             else
                 destination = _outputPath;
@@ -160,11 +181,26 @@ namespace Printune
             if (destination == null)
                 throw new Invocation.InvalidNameOrPathException($"Invalid invocation: Output parameter requires a valid path.");
 
+            var exeDirectory = Path.GetDirectoryName(Invocation.PrintuneExePath);
+
             var printuneFileName = new FileInfo(Invocation.PrintuneExePath).Name;
 
             var printuneDestination = Path.Combine(_outputPath, printuneFileName);
 
-            File.Copy(Invocation.PrintuneExePath, printuneDestination, true);
+            var files = new List<string> {
+                Invocation.PrintuneExePath,
+                Path.Combine(exeDirectory, "Newtonsoft.Json.dll"),
+                Path.Combine(exeDirectory, "System.CodeDom.dll"),
+                Path.Combine(exeDirectory, "LICENSE"),
+                Path.Combine(exeDirectory, "NewtonSoft.Json.LICENSE.md")
+            };
+
+            foreach (var file in files)
+            {
+                var path = Path.Combine(destination, Path.GetFileName(file));
+                File.Copy(file, path, true);
+            }
+
             Log.Write($"Printune executable copied from \"{Invocation.PrintuneExePath}\" to \"{printuneDestination}\".");
             return printuneDestination;
         }
@@ -197,6 +233,7 @@ namespace Printune
                 Log.Write($"IntuneWinAppUtil.exe completed successfully with exit code {result.ExitCode}.");
             else
                 Log.Write($"IntuneWinAppUtil.exe failed with exit code {result.ExitCode}.");
+
             Log.Write("OUTPUT");
             if (result.Success)
                 Log.Write(result.Output, Indent: 1);
@@ -209,6 +246,9 @@ namespace Printune
                 Log.Write(result.Error, true, 1);
             }
 
+            if (result.Success)
+                Log.Write($"Package created at {result.PackagePath}.");
+
             return result.ExitCode;
         }
         /// <summary>
@@ -220,6 +260,7 @@ namespace Printune
             var destination = CreatePackageFolder();
             var configFilePath = ExportPrinterDefinition();
             Log.Write($"Printer definition for \"{_printerName}\" created as \"{configFilePath}\".");
+
 
             if (_createPackage)
                 return PackageFolder(destination);

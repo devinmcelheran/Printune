@@ -20,6 +20,9 @@ namespace Printune
         public string DriverName { get; set; } = string.Empty;
         public string DataType { get; set; } = string.Empty;
         public string PrintProcessor { get; set; } = string.Empty;
+        [JsonProperty(Required = Required.Default)]
+        public string PreferenceFile { get; set; } = null;
+
         [JsonIgnore]
         public string PortName
         {
@@ -96,7 +99,14 @@ namespace Printune
             if (printerList.Where(printer => printer.DriverName == PrinterName).Count() > 1)
                 throw new Invocation.ConfigurationFileException($"Invalid configuration file contains more than one printer definition name '{PrinterName}'.");
 
-            return printerList.Where(printer => printer.Name == PrinterName).First();
+            try
+            {
+                return printerList.Where(printer => printer.Name == PrinterName).First();
+            }
+            catch (InvalidOperationException)
+            {
+                throw new Invocation.InvalidNameOrPathException($"The provided configuration file does not contain a printer named '{PrinterName}'.");
+            }
         }
         public static Printer FromExisting(string PrinterName)
         {
@@ -292,9 +302,12 @@ namespace Printune
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-        public static string SerializeExisting(string PrinterName)
+        public static string SerializeExisting(string PrinterName, string PreferenceFile = null)
         {
             var printer = FromExisting(PrinterName);
+            if (!string.IsNullOrEmpty(PreferenceFile))
+                printer.PreferenceFile = PreferenceFile;
+            
             if (printer == null)
                 return null;
             else

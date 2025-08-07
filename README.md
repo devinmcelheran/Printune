@@ -10,14 +10,14 @@ Printune can
 Both network printers and drivers.
 
 ## Syntax
-    printune.exe InstallDriver [-Recurse] {-Path <driver.inf> | -Path <folder\> } [-LogPath <file.log>]
+    printune.exe InstallDriver [-Recurse] {-Path <driver.inf> | -Path <folder\> } { -Name <driver name> } [-LogPath <file.log>]
     printune.exe UninstallDriver { -Driver <PrinterDriverName> | -Path <driver.inf> } [-LogPath <file.log>]
     
-    printune.exe InstallPrinter { -Name <PrinterName> } [ -Config <config.json> ] [-LogPath <file.log>]
-    printune.exe UninstallPrinter { -Name <PrinterName> } [-LogPath <file.log>]
+    printune.exe InstallPrinter { -PrinterName <PrinterName> } [ -Config <config.json> ] [-LogPath <file.log>]
+    printune.exe UninstallPrinter { -PrinterName <PrinterName> } [-LogPath <file.log>]
     
     printune.exe PackageDriver { -Driver <PrinterDriverName> | -Path <driver.inf> } [ -Output <destination\> ] [ -IntuneWinUtil <path\intunewinutil.exe> ] [-LogPath <path\to\file.log>]
-    printune.exe PackagePrinter { -PrinterName <PrinterName>} [ -Output <destination\> ] [ -IntuneWinUtil <path\intunewinutil.exe> ] [-LogPath <file.log>]
+    printune.exe PackagePrinter { -PrinterName <PrinterName>} [ -ExportPreferences ] [ -Output <destination\> ] [ -IntuneWinUtil <path\intunewinutil.exe> ] [-LogPath <file.log>]
     
     printune.exe VerifyDriver -Name <DriverName> [-Version <Version>] [-LogPath <file.log>]
     printune.exe VerifyPrinter -Name <PrinterName> [-LogPath <file.log>]
@@ -101,11 +101,11 @@ You can even specify a file that's accessible over HTTP/S.
 ## Drivers
 Printune can install and uninstall drivers with just a few arguments.
 ### Installing a Driver with a Single .inf File
-    C:\> printune.exe InstallDriver -Path zerocks_uni_pcl6\x3UNIVZ.inf
+    C:\> printune.exe InstallDriver -Path zerocks_uni_pcl6\x3UNIVZ.inf -Name "Zerocks Global PCL6"
 ### Installing a Driver with Many .inf Files
-    C:\> printune.exe InstallDriver -Recurse -Path driver\
+    C:\> printune.exe InstallDriver -Recurse -Path "driver\" -Name "Zerocks Global PCL6"
 ### Uninstalling a Driver Using an .inf File Path
-    C:\> printune.exe UninstallDriver -Path zerocks_uni_pcl6\x3UNIVZ.inf
+    C:\> printune.exe UninstallDriver -Path "zerocks_uni_pcl6\x3UNIVZ.inf"
 ### Uninstalling a Driver by Name
     C:\> printune.exe UninstallDriver -Driver "Zerocks Global PCL6"
 
@@ -129,3 +129,6 @@ I'm open to any and all advice with respect to design, patterns, and project man
 There's definitely some weirdness going on in this project. I started it as just a packaging tool that would use existing scripts. Because of that, I was sticking with .Net 8. But when I realized that managing printers and drivers on the endpoints with the same tool would be beneficial. I made those additions before realizing that it would mean deploying .Net 8 to all of our endpoints as well. This wasn't desirable, so I pivoted and added the `netstandard2.0` target (.Net 4.8).
 
 This required the removal of several C# features (like static interface methods) as well as `System.Text.Json` in favor of `Newtonsoft.Json`. This introduced a lot of change, including many errors, some of which might not have been dealt with yet.
+
+# Thank You
+Thank you [@seirdotexe](https://github.com/seirdotexe) for all your help and patience in troubleshooting.

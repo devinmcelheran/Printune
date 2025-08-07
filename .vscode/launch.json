@@ -17,8 +17,7 @@
             "console": "internalConsole",
             "args": [ "Help", "-Template" ],
             "env": {
-                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
-                "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
+                "intunewinutil": "C:\\Tools\\IntuneWinAppUtil.exe",
             }
         },
         {
@@ -32,12 +31,11 @@
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
             "args" : [
-                "InstallPrinter", "-PrinterName", "B38UPrintune", "-Config", "C:\\temp\\PrintuneTest\\B38UPrintune\\config.json"
+                "InstallPrinter", "-PrinterName", "B38U", "-Config", "C:\\temp\\B38U\\config.json"
             ],
             "console": "internalConsole",
             "env": {
-                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
-                "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
+                "intunewinutil": "C:\\Tools\\IntuneWinAppUtil.exe",
             }
         },
         {
@@ -55,7 +53,7 @@
             ],
             "console": "internalConsole",
             "env": {
-                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "intunewinutil": "C:\\Tools\\IntuneWinAppUtil.exe",
                 "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
             }
         },
@@ -70,11 +68,11 @@
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
             "args" : [
-                "PackagePrinter", "-PrinterName", "B38U", "-Output", "C:\\Temp\\PrintuneTest\\B38UPrintune", "-IntuneWinUtil", "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe"
+                "PackagePrinter", "-PrinterName", "B38U", "-ExportPreferences", "-Output", "C:\\Temp\\B38U", "-IntuneWinUtil", "C:\\Tools\\IntuneWinAppUtil.exe"
             ],
             "console": "internalConsole",
             "env": {
-                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "intunewinutil": "C:\\Tools\\IntuneWinAppUtil.exe",
                 "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
             }
         },
@@ -89,11 +87,11 @@
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
             "args" : [
-                "PackageDriver", "-Driver", "Xerox Global Print Driver PCL6", "-Output", "C:\\Temp\\Printune\\XeroxPCL", "-IntuneWinUtil", "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe"
+                "PackageDriver", "-Driver", "Xerox Global Print Driver PCL6", "-Output", "C:\\Temp\\Printune\\XeroxPCL", "-IntuneWinUtil", "C:\\Tools\\IntuneWinAppUtil.exe"
             ],
             "console": "internalConsole",
             "env": {
-                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "intunewinutil": "C:\\Tools\\IntuneWinAppUtil.exe",
                 "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
             }
         },
@@ -108,11 +106,11 @@
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
             "args" : [
-                "UninstallDriver", "-Driver", "Xerox Global Print Driver PCL6", "-Output", "C:\\Temp\\Printune\\XeroxPCL", "-IntuneWinUtil", "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe"
+                "UninstallDriver", "-Driver", "Xerox Global Print Driver PCL6", "-Output", "C:\\Temp\\Printune\\XeroxPCL", "-IntuneWinUtil", "C:\\Tools\\IntuneWinAppUtil.exe"
             ],
             "console": "internalConsole",
             "env": {
-                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "intunewinutil": "C:\\Tools\\IntuneWinAppUtil.exe",
                 "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
             }
         },
@@ -131,7 +129,7 @@
             ],
             "console": "internalConsole",
             "env": {
-                "intunewinutil": "C:\\Users\\devin.mcelheran\\OneDrive - Voyageur Aviation Corp\\Packages\\IntuneWinAppUtil.exe",
+                "intunewinutil": "C:\\Tools\\IntuneWinAppUtil.exe",
                 "printunepath": "${workspaceFolder}/bin/debug/net8.0/win-x64/printune.exe"
             }
         },
