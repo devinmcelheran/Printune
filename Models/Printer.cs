@@ -20,6 +20,9 @@ namespace Printune
         public string DriverName { get; set; } = string.Empty;
         public string DataType { get; set; } = string.Empty;
         public string PrintProcessor { get; set; } = string.Empty;
+        [JsonProperty(Required = Required.Default)]
+        public string PreferenceFile { get; set; } = null;
+
         [JsonIgnore]
         public string PortName
         {
@@ -299,9 +302,12 @@ namespace Printune
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-        public static string SerializeExisting(string PrinterName)
+        public static string SerializeExisting(string PrinterName, string PreferenceFile = null)
         {
             var printer = FromExisting(PrinterName);
+            if (!string.IsNullOrEmpty(PreferenceFile))
+                printer.PreferenceFile = PreferenceFile;
+            
             if (printer == null)
                 return null;
             else

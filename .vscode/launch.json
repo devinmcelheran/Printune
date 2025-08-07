@@ -31,7 +31,7 @@
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
             "args" : [
-                "InstallPrinter", "-PrinterName", "CanonPrintune", "-Config", "C:\\temp\\B38U\\config.json"
+                "InstallPrinter", "-PrinterName", "B38U", "-Config", "C:\\temp\\B38U\\config.json"
             ],
             "console": "internalConsole",
             "env": {
@@ -68,7 +68,7 @@
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/bin/Debug/net8.0/win-x64/Printune.dll",
             "args" : [
-                "PackagePrinter", "-PrinterName", "ZDesigner GK420t", "-Output", "C:\\Temp\\Zebra", "-IntuneWinUtil", "C:\\Tools\\IntuneWinAppUtil.exe"
+                "PackagePrinter", "-PrinterName", "B38U", "-ExportPreferences", "-Output", "C:\\Temp\\B38U", "-IntuneWinUtil", "C:\\Tools\\IntuneWinAppUtil.exe"
             ],
             "console": "internalConsole",
             "env": {
