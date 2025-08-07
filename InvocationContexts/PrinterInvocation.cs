@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Printune.Models;
 
 namespace Printune
 {
@@ -88,6 +89,9 @@ namespace Printune
                 // Creates Windows the print queue.
                 printer.Commit();
                 Log.Write($"Printer successfully added.");
+
+                if (!String.IsNullOrEmpty(printer.PreferenceFile))
+                    new PrinterPreference(printer.PreferenceFile).Apply(_printerName);
             }
             else
             {
