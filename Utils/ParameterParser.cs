@@ -31,8 +31,11 @@ namespace Printune
                 return false;
             }
 
-            if ((argPosition + 1) > argList.Count)
-                throw new Invocation.MissingArgumentException($"The {ParameterName} parameter must be followed by an argument.");
+            if ((argPosition + 1) > (argList.Count - 1))
+            {
+                Log.Write($"The {ParameterName.Trim('-')} parameter must be followed by an argument.", IsError: true);
+                throw new Invocation.MissingArgumentException($"The {ParameterName.Trim('-')} parameter must be followed by an argument.");
+            }
 
             Value = argList[argPosition + 1];
             return true;

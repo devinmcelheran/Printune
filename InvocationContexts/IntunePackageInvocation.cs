@@ -141,6 +141,8 @@ namespace Printune
             string preferenceFile = null;
             if (_exportPrinterPreferences)
             {
+                Log.Write("Exporting printer preferences.");
+                Log.Write("WARNING: Not all printer preferences are supported and support appears to vary by vendor, model, and driver.");
                 preferenceFile = Path.Combine(_outputPath, $"{_printerName}.dat");
                 PrinterPreference.Export(_printerName, preferenceFile);
             }
@@ -213,8 +215,6 @@ namespace Printune
         {
             IntuneWinUtil.Result result;
 
-            var printunePath = CopyPrintune();
-
             // We take the parent directory of the source folder
             // because that's where we're putting the .intunewin package.
             var destinationDir = Directory.GetParent(Source);
@@ -222,7 +222,7 @@ namespace Printune
                 throw new DirectoryNotFoundException($"Directory {Source} does not exist.");
 
             result = IntuneWinUtil.InvokeIntuneWinUtil(
-                                            printunePath,
+                                            Path.Combine(destinationDir.FullName, "printune.exe"),
                                             Source, // Source
                                             destinationDir.FullName,
                                             _packageName,
@@ -261,6 +261,13 @@ namespace Printune
             var configFilePath = ExportPrinterDefinition();
             Log.Write($"Printer definition for \"{_printerName}\" created as \"{configFilePath}\".");
 
+            var paramFile = new ParameterFile();
+            paramFile.AddParameter("PrinterName", _printerName);
+            paramFile.AddParameter("Config", Path.GetFileName(configFilePath));
+            paramFile.WriteToFile(Path.Combine(destination, "parameters.json"));
+            Log.Write($"Parameter file created at \"{Path.Combine(destination, "parameters.json")}\".");
+
+            CopyPrintune();
 
             if (_createPackage)
                 return PackageFolder(destination);
@@ -286,6 +293,8 @@ namespace Printune
             {
                 PackageDriverFromFile();
             }
+
+            CopyPrintune();
 
             if (_createPackage)
                 return PackageFolder(destination);
