@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Principal;
 
@@ -10,6 +11,13 @@ namespace Printune
     /// </summary>
     public static class Invocation
     {
+        public static string[] Args
+        {
+            get
+            {
+                return Environment.GetCommandLineArgs().Skip(1).ToArray();
+            }
+        }
         /// <summary>
         /// The different contexts in which Printune.exe can be run.
         /// </summary>
@@ -69,11 +77,25 @@ namespace Printune
                             .IsInRole(WindowsBuiltInRole.Administrator);
             }
         }
+        
+        public static bool RunningDebug
+        {
+            get
+            {
+                #if DEBUG
+                return true;
+                #endif
+                #pragma warning disable CS0162 // Unreachable code detected
+                return false;
+            }
+        }
         /// <summary>
         /// The path of the current executable, used for when copying it into a package.
         /// </summary>
-        public static string PrintuneExePath {
-            get {
+        public static string PrintuneExePath
+        {
+            get
+            {
                 var process = System.Diagnostics.Process.GetCurrentProcess();
                 var module = process.MainModule;
 
@@ -84,14 +106,21 @@ namespace Printune
                     path = string.Empty;
 
                 // If running in debug, use the "printunepath" environment variable that's configured in VS Code launch.json.
-                #if DEBUG
+#if DEBUG
                 path = Environment.GetEnvironmentVariable("printunepath");
-                #endif
+#endif
 
                 return path;
             }
         }
-
+        /// <summary>
+        /// The path to the directory containing the Printune executable.
+        /// </summary>
+        public static string PrintuneDir => Directory.GetParent(PrintuneExePath).FullName;
+        /// <summary>
+        /// The path to the paramters file.
+        /// </summary>
+        public static string ParamFile => Path.Combine(PrintuneDir, "parameters.json");
         /// <summary>
         /// Gets the Context enum from a string in a case-insensitive way and fails to help context.
         /// </summary>
@@ -138,17 +167,6 @@ namespace Printune
                 throw new InvalidOperationException($"No constructor found for context {contextType.Name} with paramter of type string[].");
 
             return (IInvocationContext)constructor.Invoke(new object[] { Args });
-            // switch (context)
-            // {
-            //     case Context.Help: return new HelpInvocation(Args);
-            //     case Context.InstallDriver: return new DriverInvocation(Args, context);
-            //     case Context.UninstallDriver: return new DriverInvocation(Args, context);
-            //     case Context.InstallPrinter: return new PrinterInvocation(Args, context);
-            //     case Context.UninstallPrinter: return new PrinterInvocation(Args, context);
-            //     case Context.PackagePrinter: return new IntunePackageInvocation(Args, context);
-            //     case Context.PackageDriver: return new IntunePackageInvocation(Args, context);
-            //     default: return new HelpInvocation(Args);
-            // }
         }
         // Here onward are the various invocation errors
         // that inform the HelpInvocation as to what

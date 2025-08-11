@@ -51,31 +51,43 @@ namespace Printune
         /// <summary>
         /// The only constructor, very simple.
         /// </summary>
-        /// <param name="Args">The arguments provided from the command line.</param>
+        /// <param name="_args">The arguments provided from the command line.</param>
         /// <param name="Intent">Arg[0] string parsed to Invocation.Context enum, informs intent of invocation (un/install).</param>
         /// <exception cref="Invocation.ElevatedPrivilegesRequiredException">Thrown when elevated privileges are required; ie: driver installation.</exception>
         /// <exception cref="Invocation.InvalidNameOrPathException">Thrown when an invalid name (ex: driver name) or path (ex: driver path) is provided.</exception>
         public DriverInvocation(string[] Args)
         {
-            bool debug = false;
-
-#if DEBUG
-            debug = true;
-#endif
-
-            if (!Invocation.IsElevated && !debug)
+            // Check if the user is running with elevated privileges.
+            // Allow to proceed anyway if running in debug mode.
+            if (!Invocation.IsElevated && !Invocation.RunningDebug)
                 throw new Invocation.ElevatedPrivilegesRequiredException($"Elevated privilege required for {_intent} of print drivers.");
 
-            _intent = _intentStrings[Args[0].ToLower()];
-            _recurse = ParameterParser.GetFlag(Args, "-Recurse");
+            _intent = _intentStrings[Invocation.Args[0].ToLower()];
+
+            string paramFile = string.Empty;
+            if (ParameterParser.GetParameterValue("-ParamFile", out paramFile))
+                ParseParameterFile(paramFile);
+            else if (File.Exists(Invocation.ParamFile))
+                ParseParameterFile(Invocation.ParamFile);
+            else
+                ParseCommandLine();
+        }
+
+        /// <summary>
+        /// Parses the command line arguments to extract the required parameters.
+        /// </summary>
+        /// <exception cref="Invocation.InvalidNameOrPathException">Thrown when the provided path does not exist.</exception>
+        private void ParseCommandLine()
+        {
+            _recurse = ParameterParser.GetFlag("-Recurse");
 
             // If no path is provided, default to working directory.
-            if (!ParameterParser.GetParameterValue(Args, "-Path", out _path))
+            if (!ParameterParser.GetParameterValue("-Path", out _path))
             {
                 _path = Environment.CurrentDirectory;
             }
 
-            if (!ParameterParser.GetParameterValue(Args, "-Name", out _name) && _intent == "installation")
+            if (!ParameterParser.GetParameterValue("-Name", out _name) && _intent == "installation")
             {
                 throw new Invocation.InvalidNameOrPathException("No driver name provided for installation.");
             }
@@ -93,6 +105,41 @@ namespace Printune
             }
         }
 
+        /// <summary>
+        /// Parses the parameter file for the required parameters.
+        /// </summary>
+        /// <exception cref="Invocation.InvalidNameOrPathException"></exception>
+        private void ParseParameterFile(string paramFilePath)
+        {
+            var paramFile = new ParameterFile(paramFilePath);
+
+            try
+            {
+                _recurse = (bool)paramFile.GetParameter("recurse");
+            }
+            catch (KeyNotFoundException)
+            {
+                _recurse = false;
+            }
+
+            try
+            {
+                _name = (string)paramFile.GetParameter("name");
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new Invocation.InvalidNameOrPathException("The parameter file does not contain a driver name entry.");
+            }
+
+            try
+            {
+                _path = (string)paramFile.GetParameter("path");
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new Invocation.InvalidNameOrPathException("The parameter file does not contain a driver path entry.");
+            }
+        }
         /// <summary>
         /// Installs or uninstalls driver(s) according to the provided parameters.
         /// </summary>

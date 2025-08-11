@@ -10,6 +10,7 @@ namespace Printune.Models
 
         public PrinterPreference(string preferenceFile)
         {
+            Log.Write($"Printer preference file: {preferenceFile}");
             PreferenceFile = ConfigReader.CopyToLocal(preferenceFile);
             if (!File.Exists(PreferenceFile))
                 if (preferenceFile.StartsWith(Path.GetTempPath(), StringComparison.InvariantCultureIgnoreCase))
@@ -37,7 +38,7 @@ namespace Printune.Models
             var psi = new ProcessStartInfo()
             {
                 FileName = "rundll32.exe",
-                Arguments = $"printui.dll,PrintUIEntry /Ss /n \"{PrinterName}\" /a \"{PreferenceFile}\" /q",
+                Arguments = $"printui.dll,PrintUIEntry /Sr /n \"{PrinterName}\" /a \"{PreferenceFile}\" /q",
                 WindowStyle = ProcessWindowStyle.Hidden,
                 WorkingDirectory = Directory.GetCurrentDirectory()
             };
@@ -77,7 +78,7 @@ namespace Printune.Models
             var psi = new ProcessStartInfo()
             {
                 FileName = "rundll32.exe",
-                Arguments = $"printui.dll,PrintUIEntry /Sr /n \"{PrinterName}\" /a \"{OutputFile}\" /q",
+                Arguments = $"printui.dll,PrintUIEntry /Ss /n \"{PrinterName}\" /a \"{OutputFile}\" /q",
                 WindowStyle = ProcessWindowStyle.Hidden,
                 WorkingDirectory = Directory.GetCurrentDirectory()
             };

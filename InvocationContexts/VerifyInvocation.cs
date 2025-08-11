@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Printune
 {
@@ -17,10 +18,13 @@ namespace Printune
         {
             _intent = _intentStrings[Args[0].ToLower()];
 
-            if (!ParameterParser.GetParameterValue(Args, "-Name", out _name))
-                throw new Invocation.InvalidNameOrPathException("No name provided.");
-
-            ParameterParser.GetParameterValue(Args, "-Version", out _version);
+            string paramFilePath = null;
+            if (ParameterParser.GetParameterValue("-ParamFile", out paramFilePath))
+                ParseParameterFile(paramFilePath);
+            else if (File.Exists(Invocation.ParamFile))
+                ParseParameterFile(Invocation.ParamFile);
+            else
+                ParseCommandLine();
         }
 
         public static void Register()
@@ -34,6 +38,36 @@ namespace Printune
             _intentStrings.Add("VerifyDriver".ToLower(), "driver");
         }
 
+        private void ParseCommandLine()
+        {
+            if (!ParameterParser.GetParameterValue("-Name", out _name))
+                throw new Invocation.InvalidNameOrPathException("No name provided.");
+
+            ParameterParser.GetParameterValue("-Version", out _version);
+        }
+
+        private void ParseParameterFile(string parameterFilePath)
+        {
+            var parameterFile = new ParameterFile(parameterFilePath);
+
+            try
+            {
+                _name = (string)parameterFile.GetParameter("Name");
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new Invocation.InvalidNameOrPathException("No \"Name\" found in parameter file.");
+            }
+
+            try
+            {
+                _version = (string)parameterFile.GetParameter("Version");
+            }
+            catch (KeyNotFoundException)
+            {
+                // Do nothing, version is optional.
+            }
+        }
         public int Invoke()
         {
             if (_intent == "printer")
