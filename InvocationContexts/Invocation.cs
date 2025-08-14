@@ -124,9 +124,9 @@ namespace Printune
         {
             get
             {
-#if DEBUG
-                return @"C:\temp\B38U\parameters.json";
-#endif
+// #if DEBUG
+//                 return @"C:\temp\B38U\parameters.json";
+// #endif
                 return Path.Combine(PrintuneDir, "parameters.json");
             }
         }
