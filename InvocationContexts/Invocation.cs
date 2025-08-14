@@ -120,7 +120,16 @@ namespace Printune
         /// <summary>
         /// The path to the paramters file.
         /// </summary>
-        public static string ParamFile => Path.Combine(PrintuneDir, "parameters.json");
+        public static string ParamFile
+        {
+            get
+            {
+// #if DEBUG
+//                 return @"C:\temp\B38U\parameters.json";
+// #endif
+                return Path.Combine(PrintuneDir, "parameters.json");
+            }
+        }
         /// <summary>
         /// Gets the Context enum from a string in a case-insensitive way and fails to help context.
         /// </summary>
@@ -156,7 +165,16 @@ namespace Printune
                 return new HelpInvocation($"Invalid invocation context '{Args[0]}'.");
             }
 
-            Type contextType = ContextMap[Args[0].ToLower()];
+            Type contextType;
+            try
+            {
+                contextType = ContextMap[Args[0].ToLower()];
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new Invocation.InvalidNameOrPathException($"Invalid operation: {Args[0]}");
+            }
+                
 
             if (contextType == null)
                 return new HelpInvocation($"Invalid parameter: {Args[0]}");

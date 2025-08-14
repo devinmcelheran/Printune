@@ -50,9 +50,23 @@ namespace Printune
         {
             var parameterFile = new ParameterFile(parameterFilePath);
 
+            if (_intent == "printer")
+            {
+                try
+                {
+                    _name = (string)parameterFile.GetParameter("PrinterName");
+                }
+                catch (KeyNotFoundException)
+                {
+                    throw new Invocation.InvalidNameOrPathException("No \"PrinterName\" found in parameter file.");
+                }
+                
+                return;
+            }
+            
             try
             {
-                _name = (string)parameterFile.GetParameter("Name");
+                _name = (string)parameterFile.GetParameter("Driver");
             }
             catch (KeyNotFoundException)
             {

@@ -127,8 +127,11 @@ namespace Printune
                 if (!driver.Exists)
                     throw new Invocation.ConfigurationFileException($"Printer driver \"{printer.DriverName}\" not installed and/or enabled.");
 
+                if (!PrintProcessor.Exists(printer.PrintProcessor))
+                    throw new Invocation.ConfigurationFileException($"Print Processes \"{printer.PrintProcessor}\" does not exist on system.");
+
                 // Creates Windows the print queue.
-                printer.Commit();
+                    printer.Commit();
                 Log.Write($"Printer successfully added.");
 
                 if (!String.IsNullOrEmpty(printer.PreferenceFile))

@@ -155,7 +155,7 @@ namespace Printune
             {
                 // Drop the fully-qualified path down to the relative
                 // to make logging easier to read.
-                var fileRelativePath = file.Replace(_path, "");
+                var fileRelativePath = "." + file.Replace(Path.GetFullPath(Directory.GetCurrentDirectory()), "");
                 PnpUtil.Result result;
 
                 // Switch the invocation based on provided context.
@@ -218,7 +218,8 @@ namespace Printune
 
             SearchOption recursiveSearch = _recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
-            fileList.AddRange(Directory.GetFiles(_path, "*.inf", recursiveSearch));
+            var files = Directory.GetFiles(_path, "*.inf", recursiveSearch).ToList();
+            files.ForEach(file => fileList.Add(Path.GetFullPath(file)));
 
             return fileList;
         }

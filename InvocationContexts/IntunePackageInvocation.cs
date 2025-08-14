@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using Printune.Models;
 
@@ -91,9 +92,9 @@ namespace Printune
             if (_intent == "printer" && ParameterParser.GetFlag(Args, "-ExportPreferences"))
             {
                 bool debug = false;
-                #if DEBUG
+#if DEBUG
                 debug = true;
-                #endif
+#endif
                 if (!Invocation.IsElevated && !debug)
                     throw new UnauthorizedAccessException("Exporting printer preferences requires elevated (administrator) permissions.");
                 _exportPrinterPreferences = true;
@@ -268,6 +269,7 @@ namespace Printune
             Log.Write($"Parameter file created at \"{Path.Combine(destination, "parameters.json")}\".");
 
             CopyPrintune();
+            CreateVerificationScript();
 
             if (_createPackage)
                 return PackageFolder(destination);
@@ -285,6 +287,14 @@ namespace Printune
             if (_driverName == null)
                 throw new Invocation.MissingArgumentException("Invalid invocation: A valid DriverName value is required.");
 
+            var paramFile = new ParameterFile();
+            paramFile.AddParameter("DriverName", _driverName);
+            if (_exportDriverFromSystem)
+                using (var driver = new PrinterDriver(_driverName))
+                    paramFile.AddParameter("Version", driver.Version);
+            paramFile.WriteToFile(Path.Combine(destination, "parameters.json"));
+            Log.Write($"Parameter file created at \"{Path.Combine(destination, "parameters.json")}\".");
+
             if (_exportDriverFromSystem)
             {
                 PackageSystemDriver();
@@ -295,6 +305,7 @@ namespace Printune
             }
 
             CopyPrintune();
+            CreateVerificationScript();
 
             if (_createPackage)
                 return PackageFolder(destination);
@@ -378,6 +389,18 @@ namespace Printune
             var path = FsHelper.CreateDirectory(_outputPath);
             Log.Write($"Package directory \"{path}\" created.");
             return path;
+        }
+
+        private void CreateVerificationScript()
+        {
+            string intent;
+            if (_intent == "printer")
+                intent = "VerifyPrinter";
+            else
+                intent = "VerifyDriver";
+            
+            string scriptContent = $@"exit (Start-Process -FilePath .\printune.exe -AgumentList ""{intent}"" -PassThru -Wait).ExitCode";
+            File.WriteAllText(Path.Combine(_outputPath, "verify.ps1"), scriptContent);
         }
     }
 }
