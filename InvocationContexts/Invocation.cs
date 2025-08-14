@@ -165,7 +165,16 @@ namespace Printune
                 return new HelpInvocation($"Invalid invocation context '{Args[0]}'.");
             }
 
-            Type contextType = ContextMap[Args[0].ToLower()];
+            Type contextType;
+            try
+            {
+                contextType = ContextMap[Args[0].ToLower()];
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new Invocation.InvalidNameOrPathException($"Invalid operation: {Args[0]}");
+            }
+                
 
             if (contextType == null)
                 return new HelpInvocation($"Invalid parameter: {Args[0]}");
