@@ -66,7 +66,7 @@ namespace Printune
             
             try
             {
-                _name = (string)parameterFile.GetParameter("Driver");
+                _name = (string)parameterFile.GetParameter("Name");
             }
             catch (KeyNotFoundException)
             {
