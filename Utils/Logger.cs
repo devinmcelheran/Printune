@@ -18,9 +18,18 @@ namespace Printune
         {
             if (LogPath == null)
                 throw new NullReferenceException("A null value was provided instead of a valid path.");
-                
-            _logPath = LogPath ?? _logPath;
-            _initialized = true;
+
+            try
+            {
+                FsHelper.CreateDirectory(Directory.GetParent(LogPath).FullName);
+                _logPath = LogPath ?? _logPath;
+                _initialized = true;
+            }
+            catch (System.Exception ex)
+            {
+                _initialized = false;
+                Write($"Creating folder {Directory.GetParent(LogPath).FullName} failed with the below error. Continuing without log file.\n{ex}");
+            }
         }
 
         /// <summary>

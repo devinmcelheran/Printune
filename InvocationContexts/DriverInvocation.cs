@@ -155,12 +155,16 @@ namespace Printune
             {
                 // Drop the fully-qualified path down to the relative
                 // to make logging easier to read.
-                var fileRelativePath = "." + file.Replace(Path.GetFullPath(Directory.GetCurrentDirectory()), "");
+                string fileRelativePath = "." + file.Replace(Path.GetFullPath(Directory.GetCurrentDirectory()), "");
+                // If the path doesn't make sense, just use the full path.
+                if (!File.Exists(fileRelativePath))
+                    fileRelativePath = file;
+
                 PnpUtil.Result result;
 
                 // Switch the invocation based on provided context.
                 if (_intent == "installation")
-                    result = PnpUtil.InstallDriver(_path);
+                    result = PnpUtil.InstallDriver(file);
                 else
                     result = PnpUtil.UninstallDriver(_name ?? _path);
 

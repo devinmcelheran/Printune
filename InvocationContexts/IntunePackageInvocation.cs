@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using Printune.Models;
 
@@ -393,14 +392,36 @@ namespace Printune
 
         private void CreateVerificationScript()
         {
-            string intent;
+            string printerScript = @"
+$pn = ""${printerName}""
+try {
+    if ($null -ne (Get-Printer $pn)) { Write-Host ""Printer `""$pn`"" installed successfully.""; exit 0}
+    throw
+} catch { Write-Error ""Printer `""$pn`"" failed to install.""; exit 1}
+";
+            string driverScript = @"
+$dn = ""${driverName}""; $dv = ""${driverVersion}""
+try {
+    $iv = (Get-WindowsDriver -Online -Driver (Get-PrinterDriver $dn).InfPath)[0].Version
+    if (([string]::IsNullOrWhiteSpace($dv)) -or ($dv -eq $iv))
+    { Write-Error ""Printer driver `""$dn`""$(if ($dv){"" ($dv)""} else {[string]::Empty}) installed successfully.""; exit 0 }
+    throw
+}
+catch { Write-Error ""Printer driver `""$dn`""$(if ($dv){"" ($dv)""} else {[string]::Empty}) installation failed.""; exit 1 }";
+            string scriptContent = "";
             if (_intent == "printer")
-                intent = "VerifyPrinter";
+                scriptContent = printerScript.Replace("${printerName}", _printerName);
             else
-                intent = "VerifyDriver";
+            {
+                string version = "";
+                using (var driver = new PrinterDriver(_driverName))
+                    if (driver.Exists) version = driver.Version;
+
+                scriptContent = driverScript.Replace("${driverName}", _driverName).Replace("${driverVersion}", version);
+            }
             
-            string scriptContent = $@"exit (Start-Process -FilePath .\printune.exe -AgumentList ""{intent}"" -PassThru -Wait).ExitCode";
-            File.WriteAllText(Path.Combine(_outputPath, "verify.ps1"), scriptContent);
+            //string scriptContent = $@"exit (Start-Process -FilePath .\printune.exe -AgumentList ""{intent}"" -PassThru -Wait).ExitCode";
+            File.WriteAllText(Path.Combine(_outputPath, "Verify-Install.ps1"), scriptContent);
         }
     }
 }
