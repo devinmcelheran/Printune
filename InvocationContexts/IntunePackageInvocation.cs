@@ -404,7 +404,7 @@ $dn = ""${driverName}""; $dv = ""${driverVersion}""
 try {
     $iv = (Get-WindowsDriver -Online -Driver (Get-PrinterDriver $dn).InfPath)[0].Version
     if (([string]::IsNullOrWhiteSpace($dv)) -or ($dv -eq $iv))
-    { Write-Error ""Printer driver `""$dn`""$(if ($dv){"" ($dv)""} else {[string]::Empty}) installed successfully.""; exit 0 }
+    { Write-Host ""Printer driver `""$dn`""$(if ($dv){"" ($dv)""} else {[string]::Empty}) installed successfully.""; exit 0 }
     throw
 }
 catch { Write-Error ""Printer driver `""$dn`""$(if ($dv){"" ($dv)""} else {[string]::Empty}) installation failed.""; exit 1 }";
